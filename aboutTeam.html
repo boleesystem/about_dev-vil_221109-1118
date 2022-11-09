@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+     <!-- 반응형 웹사이트 만들 때 필요한 코드(부트스트랩) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+   
+    <title>Dev-viL</title>
+
+    <!-- jquery 사용하기 위한 코드 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+
+    <!-- CSS연결 -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- 파비콘 -->
+    <link href="https://o.remove.bg/downloads/233c88ee-6171-4a92-a45b-df01e4a47e1f/android-icon-192x192-removebg-preview.png" rel="shortcut icon" type="image/x-icon">
+  </head>
+  <body>
+    <!-- 반응형 네비게이션바 html 출처: https://taesung1993.tistory.com/27 -->
+    <nav>
+      <!-- 로고 -->
+      <div class="logo"> 
+        <img src="https://o.remove.bg/downloads/0be34caf-697d-4868-82c4-54fa044c9200/%EC%B5%9C%EC%A2%85-removebg-preview.png" class ="logo_img_body"> 
+      </div>
+      <!-- 네비게이션바 목록 -->
+      <ul class="nav-links">
+        <li>
+          <a href="#">팀소개</a>
+        </li>
+        <li>
+          <a href="#">블로그</a>
+        </li>
+        <li>
+          <a href="#">방명록</a>
+        </li>
+      </ul>
+      <div class="burger">
+        <!-- 화면 줄였을 때 메뉴 나오게 하는 곳 -->
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </nav>
+    
+    <!-- 스크롤 내릴 때 배경 바꾸는 영역나누기 출처: https://stickode.tistory.com/438 -->
+    <div class="panel" data-color="gray">
+      <div>
+        <h1>Magic scrolling colours</h1>
+      </div>
+    </div>
+    <div class="panel" data-color="violet">
+      <h2>Violet panel</h2>
+    </div>
+    <div class="panel" data-color="indigo">
+      <h2>Indigo panel</h2>
+    </div>
+    <div class="panel" data-color="blue">
+      <h2>Blue panel</h2>
+    </div>
+    <div class="panel" data-color="green">
+      <h2>Green panel</h2>
+    </div>
+    <div class="panel" data-color="yellow">
+      <h2>Yellow panel</h2>
+    </div>
+    <div class="panel" data-color="orange">
+      <h2>Orange panel</h2>
+    </div>
+    <div class="panel" data-color="red">
+      <h2>Red panel</h2>
+    </div>
+
+    <!-- 위로 올라가는 버튼 만들기 출처: https://help.campaignus.me/article/272-topbutton -->
+    <a href="#" class="btn_gotop">
+      <span class="glyphicon glyphicon-chevron-up">
+        <img src="https://cdn.icon-icons.com/icons2/1883/PNG/512/caretsymbol_120671.png" class ="top_img"> 
+      </span>
+    </a>
+
+    <!-- 버튼만들기 응용 -->
+    <div class="btn_chat">
+      <img alt="채팅하기"
+           src="https://o.remove.bg/downloads/4ea41218-fa98-4a2b-bb07-286cb3fa877e/5219868-removebg-preview.png"
+           class="chat_img">
+    </div>
+
+
+    <!-- javascript 연결경로 -->
+    <script src="app.js"></script>
+</html>
