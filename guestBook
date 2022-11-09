@@ -1,0 +1,177 @@
+<!-- 2022.11.09. 구현 시작일 (코드 작성자 : 이보형) -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>방명록</title>
+
+    <!-- 폰트는 구글폰트의 Nanum Pen Script로 지정 -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Serif+KR&display=swap" rel="stylesheet">
+    <!-- 구글 부트스트랩 적용(1. 방명록 글 목록 번호) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+    <style>
+        /* 해당 폰트가 모든 태그에 적용되도록 * 이용 */
+        * { font-family: 'Jua', sans-serif;
+            font-family: 'Noto Serif KR', serif; }
+
+        .comment-box {
+            background-color: transparent;
+            width: 500px;
+            padding: 10px 10px;
+            box-shadow: 0px 0px 1px 0px gray;}
+
+        .nn-in-cb {
+            width: 40%;}
+
+        .pw-in-cb {
+            width: 40%;}
+
+        .cb-in-cb {
+            margin: 15px 0px 0px 10px; }
+
+        .content-in-cb {
+            width: 100%;}
+    </style>
+
+</head>
+<script>
+    // 구글 부트스트랩 적용한다는 코드
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossOrigin="anonymous"></script>
+</script>
+
+<script type="text/javascript">
+   <!-- 시작 : 방명록 글 작성 -->
+   // 방명록 글작성 코드출처 : https://2ham-s.tistory.com/160
+   // 추가적인 코드 분석+수정 필요
+
+   // 배열 구성
+   let commentArray = new Array();
+
+   // 사용자 정의 객체 구성(생성자 함수 정의)
+   function cBoard(nComment, cComment)
+   {
+      // this 키워드(누가 나를 불렀는지) - 선언이 아닌 호출에 따름
+      this.nickname=nComment;
+      this.content=cComment;
+      this.writeDay=new Date();
+   }
+
+   // 출처(현재 날짜/시간 가져오기) : https://codechacha.com/ko/javascript-get-current-date-and-time/#:~:text=Date%20%EA%B0%9D%EC%B2%B4%EB%A5%BC%20%EC%83%9D%EC%84%B1%ED%95%98%EB%A9%B4,%EB%AC%B8%EC%9E%90%EC%97%B4%EC%9D%84%20%EC%B6%9C%EB%A0%A5%ED%95%98%EC%8B%9C%EB%A9%B4%20%EB%90%A9%EB%8B%88%EB%8B%A4.
+
+   // 2022.11.09. 궁금? 작성일에서 '분'단위가 1분인 경우엔 01이 아닌 1로 나오는데 바꿀 수 있는 방법이 있을까?
+   // 출처(2자리수로 변환) : https://gent.tistory.com/413
+   // 1. getMonth() 함수는 0~11 리턴하므로 +1를 해 1~12월로 나오도록 해야 함
+   // 2. getMonth/Date/Hours/Minutes/Seconds() 함수는 수치 값을 리턴하므로 0을 붙여 2자리만 잘라 값을 변환해서 2자리수 맞추기
+   cBoard.prototype.userLocalString = function()
+   {
+      return this.writeDay.getFullYear() + "-"
+          + (this.writeDay.getMonth()+1) + "-"
+          + ('0' + this.writeDay.getDate()).slice(-2) + "-"
+          + ('0' + this.writeDay.getHours()).slice(-2) + ":"
+          + ('0' + this.writeDay.getMinutes()).slice(-2) + ":"
+          + ('0' + this.writeDay.getSeconds()).slice(-2);
+   }
+
+   function main()
+   {
+
+      //alert("함수 호출 확인");
+      let nComment = document.getElementById("nComment").value;
+      let cComment = document.getElementById("cComment").value;
+
+      let len = commentArray.length;
+
+      commentArray[len] = new cBoard(nComment, cComment);
+
+      print(len);
+      clear();
+   }
+
+   // 내용 출력 함수
+   function print(idx)
+   {
+      let tableNode = document.getElementById("bbsTable");
+      let trNode = document.createElement("tr");
+
+      trNode.appendChild(createTdNode((idx+1).toString()));
+      trNode.appendChild(createTdNode(commentArray[idx].nickname));
+      trNode.appendChild(createTdNode(commentArray[idx].content));
+      trNode.appendChild(createTdNode(commentArray[idx].userLocalString()));
+
+      tableNode.appendChild(trNode);
+   }
+
+   function createTdNode(val)
+   {
+      let textNode = document.createTextNode(val);
+      let tdNode = document.createElement("td");
+      tdNode.appendChild(textNode);
+      return tdNode;
+   }
+
+   function clear()
+   {
+	   	document.getElementById("nComment").value="";
+	   	document.getElementById("cComment").value="";
+	   	document.getElementById("nComment").focus();
+   }
+   <!-- 끝 : 방명록 글 작성 -->
+
+</script>
+
+<body>
+<h1> Dev-viL 방명록</h1>
+
+    <!-- 시작 : 방명록 글쓰기 박스 -->
+<div class="comment-box">
+    <p> <input class ='nn-in-cb' type='text' name='nn' id='nComment' value='' title='nComment' placeholder='닉네임' autocomplete="off"/>
+        <input class ='pw-in-cb' type='text' name='pw' id='pComment' value='' title='password' placeholder='비밀번호' autocomplete="off"/>
+        <input class ='cb-in-cb' type="checkbox" name='cb' id='ckComment'/> 비밀글</p>
+    <p><textarea class ="content-in-cb" type='text' name="" id='cComment' placeholder='내용을 입력하세요.' autocomplete="off"></textarea></p>
+    <!-- 2022.11.09. 궁금? textarea placeholder로 넣는 것과 <textarea> 여기 </textarea>에 넣는 것의 차이는 뭐지?
+                          placeholder에 넣으면 입력 시 해당내용이 자동으로 지워짐. '여기'에는 내용 입력 시에도 그대로 남아 있음. -->
+
+    <p> <button class='btn btn-secondary' type='button' value="등록" onclick="main()">등록</button> </p>
+
+    </div>
+    <!-- 끝 : 방명록 글쓰기 박스 -->
+
+    <!-- 시작 : 방명록 작성글 -->
+         <table class="tbl" id="bbsTable">
+            <tr>
+               <th>번호</th>
+               <th>작성자</th>
+               <th>내용</th>
+               <th>작성일</th>
+            </tr>
+         </table>
+    <!-- 끝 : 방명록 작성글 -->
+
+
+    <!-- 시작 : 방명록 글 목록 번호 (부트스트랩) -->
+    <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+    <!-- 끝 : 방명록 글 목록 번호 -->
+
+</body>
+</html>
