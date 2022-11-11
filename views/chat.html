@@ -50,14 +50,28 @@
 
     }
 
+
     #messages>li {
-        padding: 0.5rem 1rem;
+        padding: 5px 10px;
     }
 
+    .system {
+        background: violet;
+    }
+
+    .me {
+        background: #fdc635;
+    }
+
+    .other {
+        background: #80d8e8;
+    }
+
+    /*
     #messages>li:nth-child(odd) {
         background: #efefef;
     }
-
+    */
     #nicknameForm {
 
         border: none;
@@ -94,18 +108,6 @@
         box-sizing: border-box;
         backdrop-filter: blur(10px);
     }
-
-    /* #online {
-        list-style-type: none;
-        background-color: #ccc;
-        width: 15%;
-        padding: 0;
-        margin: 0;
-        position: absolute;
-        height: 85%;
-        overflow: auto;
-    }
-*/
 </style>
 
 <head>
@@ -134,14 +136,14 @@
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <script type="module">
-
-
         import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
         var socket = io();
         var messages = document.getElementById('messages');
         var editingDiv = document.getElementById('editing');
         var nicknameForm = document.getElementById('nicknameForm');
         var nicknameInput = document.getElementById('nicknameInput');
+        // 금지어 항목
+
         var form = document.getElementById('form');
         var input = document.getElementById('input');
         // online div 가져오기
@@ -152,14 +154,35 @@
             if (nicknameInput.value) {
                 socket.emit('nickname', nicknameInput.value);
             }
-        })
+        });
+        //연결 되었을때 닉네임 설정하기
+        socket.on('connect', function () {
+            var nicknameInput = prompt('닉네임을 설정해주세요. 미설정시의 기본값은 소켓ID입니다.', '');
+            socket.emit('nickname', nicknameInput);
+        });
+
+
+
         socket.on('chat message', function (msg) {
             var item = document.createElement('li');
             // 채팅 내용을 msg.name + msg.msg의 형태로 바꾸어 출력해준다.
+            if (msg === 'announce') {
+                item.setAttribute('class', 'system');
+                console.log('class가 system으로 설정되었음.')
+            }
+            else if (msg === nicknameInput) {
+                item.setAttribute('class', 'me');
+                console.log('class가 me로 설정되었음.')
+            }
+            else {
+                item.setAttribute('class', 'other');
+                console.log('class가 other으로 설정되었음.')
+            }
             item.textContent = `${msg.name}: ${msg.msg}`;
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
-        })
+        });
+
         //귓속말을 받았을때
         socket.on('whisper', function (msg) {
             var item = document.createElement('li');
@@ -167,13 +190,15 @@
             item.textContent = `${msg.name}의 귓속말: ${msg.msg}`;
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
-        })
-
+        });
 
         // online 메시지 수정하기
         socket.on('online', function (msg) {
             onlineDiv.innerText = `　online: ${msg.join(', ')}`;
         })
+
+
+
         //editing 시 메세지 채팅창에 입력중입니다 띄워주기
         input.addEventListener('change', function (e) {
             socket.emit('editing');
@@ -181,6 +206,9 @@
         socket.on('editing', function (msg) {
             editingDiv.innerText = msg;
         })
+
+
+
         //announce 요청으로 받은 모든 메세지의 처리방식
         socket.on('announce', function (msg) {
             var item = document.createElement('li');
@@ -194,6 +222,7 @@
             if (input.value) {
                 socket.emit('chat message', input.value);
                 input.value = '';
+
             }
         });
     </script>
