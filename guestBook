@@ -1,177 +1,344 @@
 <!-- 2022.11.09. 구현 시작일 (코드 작성자 : 이보형) -->
+<!-- 발생오류 FE 해결중 4건, BE 해결 1건
+FE
+1. [해결중/2022.11.10.] 버튼 순서(수정, 삭제 순으로 작성했으나 삭제, 수정 순으로 뜸) - class명이 같아서 그런 걸로 추정)
+2. [해결중/2022.11.10.] 버튼 간격(삭제, 수정 버튼 사이의 간격을 띄우고 싶어 구글링한대로  <span class="btn_space"></span>를 넣었으나 작동 안 함. 더 방법을 찾아 봐야 함)
+3. [해결중/2022.11.10.] 부트스트랩 글씨색 변경(부트스트랩에서 가져온 페이지번호(<<123>>>) 부분의 글씨색을 검정색으로 바꾸고 싶었으나 color로 적용 안됨. 강제 적용하는 방법이 있다고 하여 찾아 봐야 함)
+4. [해결중/2022.11.10.] 비밀번호 보이기/숨기기 기능(적용 오류가 남. 중요기능은 아니므로 현재로서는 우선순위 최하위로 배치)
+
+BE
+1. [해결완료/2022.11.10.] 서버 호스팅 이슈(app_guestbook.py 즉 server.py 파일이 render_template으로 지정한 guestbook.html을 못찾는 이슈로 서버 호스팅이 안됨. .py 파일을 기존 폴더 밖으로 이동한 후 해결됨 / 파이썬 flask 기본 구조가 server.py 파일이 밖에 있고 templates 폴더 안에 접속할 html 파일이 들어 있어야 하는데, server.py 파일을 해당 폴더 안에 넣어놨기 때문에 flask가 찾지 못하는 오류가 발생한 것임)
+*jinja2.exceptions.TemplateNotFound: guestbook.html
+-->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>방명록</title>
 
     <!-- 폰트는 구글폰트의 Nanum Pen Script로 지정 -->
-    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Serif+KR&display=swap" rel="stylesheet">
-    <!-- 구글 부트스트랩 적용(1. 방명록 글 목록 번호) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <!-- 구글 부트스트랩 적용(1. 방명록 글 목록 번호 2. 등록/수정/삭제 버튼) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- JQuery 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <style>
         /* 해당 폰트가 모든 태그에 적용되도록 * 이용 */
-        * { font-family: 'Jua', sans-serif;
-            font-family: 'Noto Serif KR', serif; }
+        * {
+            font-family: 'Nanum Pen Script', cursive;
+        }
 
-        .comment-box {
-            background-color: transparent;
+        .title {
+            padding: 10px 20px;
+            margin: 10px auto 10px auto;
+        }
+
+        .write-box {
             width: 500px;
             padding: 10px 10px;
-            box-shadow: 0px 0px 1px 0px gray;}
+            margin: 30px auto 20px auto;
+            margin-left: 20px;
+            box-shadow: 0px 0px 1px 0px gray;
+        }
 
-        .nn-in-cb {
-            width: 40%;}
+        .written-comment {
+            width: 500px;
+            padding: 10px 10px;
+            margin: 10px auto 10px auto;
+            margin-left: 20px;
+            background-color: transparent;
+            box-shadow: 0px 0px 1px 0px gray;
+        }
 
-        .pw-in-cb {
-            width: 40%;}
+        .usrname {
+            margin: 5px 0px 0px -13px;
+            width: 10%;
+        }
 
-        .cb-in-cb {
-            margin: 15px 0px 0px 10px; }
+        .psw {
+            margin: 0px 5px;
+            width: 20%;
+        }
+
+        .intro-psw {
+            margin: -13px;
+        }
 
         .content-in-cb {
-            width: 100%;}
+            width: 105.5%;
+            height: 100px;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin: 0px 0px 0px -13px;
+        }
+
+        .cb-in-cb {
+            margin: 0px 2px 9px -10px;
+        }
+
+        .mybtn {
+            background-color: gainsboro;
+            float: right;
+            border-radius: 4px;
+        }
+
+        .btn_space {
+            width: 100px;
+            height: 10px;
+            display: inline-block;
+        }
+
+        .myimg {
+            margin-right: 5px;
+        }
+
+        .pagination {
+            color: #222222;
+            width: 300px;
+            margin: 10px auto 10px auto;
+            margin-left: 180px;
+        }
+
+        .img-eye-show {
+            margin: 0px 0px 0px 5px;
+        }
+
+        .img-eye-hide {
+            margin: 0px 0px 0px 5px;
+            display: none;
+        }
+
+        input[type=text] {
+            width: 41%;
+            height: 35px;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+
+        input[type=password] {
+            width: 50%;
+            height: 35px;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 10px;
+        }
+
+        input[type=submit] {
+            background-color: gainsboro;
+            float: right;
+            border-radius: 4px;
+            margin-top: -8px;
+            margin-right: -12px;
+        }
     </style>
 
 </head>
+<!-- 구글 부트스트랩 적용 코드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossOrigin="anonymous"></script>
+
 <script>
-    // 구글 부트스트랩 적용한다는 코드
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossOrigin="anonymous"></script>
-</script>
+    <!-- 시작 : DB 저장/조회 -->
 
-<script type="text/javascript">
-   <!-- 시작 : 방명록 글 작성 -->
-   // 방명록 글작성 코드출처 : https://2ham-s.tistory.com/160
-   // 추가적인 코드 분석+수정 필요
+    function save_comment() {
+        let usrname = $('#usrname').val()
+        let cntcomment = $('#cntcomment').val()
 
-   // 배열 구성
-   let commentArray = new Array();
+        $.ajax({
+            type: 'POST',
+            url: '/guestbook',
+            data: { usrname_give: usrname, cntcomment_give: cntcomment },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.reload()
+            }
+        })
+    }
 
-   // 사용자 정의 객체 구성(생성자 함수 정의)
-   function cBoard(nComment, cComment)
-   {
-      // this 키워드(누가 나를 불렀는지) - 선언이 아닌 호출에 따름
-      this.nickname=nComment;
-      this.content=cComment;
-      this.writeDay=new Date();
-   }
+    <!-- 끝 : DB 저장/조회 -->
 
-   // 출처(현재 날짜/시간 가져오기) : https://codechacha.com/ko/javascript-get-current-date-and-time/#:~:text=Date%20%EA%B0%9D%EC%B2%B4%EB%A5%BC%20%EC%83%9D%EC%84%B1%ED%95%98%EB%A9%B4,%EB%AC%B8%EC%9E%90%EC%97%B4%EC%9D%84%20%EC%B6%9C%EB%A0%A5%ED%95%98%EC%8B%9C%EB%A9%B4%20%EB%90%A9%EB%8B%88%EB%8B%A4.
+    <!-- 시작 : 비밀번호 설정 -->
+    /* var myInput = document.getElementById("psw");
+        var letter = document.getElementById("letter");
+        var capital = document.getElementById("capital");
+        var number = document.getElementById("number");
+        var length = document.getElementById("length");
 
-   // 2022.11.09. 궁금? 작성일에서 '분'단위가 1분인 경우엔 01이 아닌 1로 나오는데 바꿀 수 있는 방법이 있을까?
-   // 출처(2자리수로 변환) : https://gent.tistory.com/413
-   // 1. getMonth() 함수는 0~11 리턴하므로 +1를 해 1~12월로 나오도록 해야 함
-   // 2. getMonth/Date/Hours/Minutes/Seconds() 함수는 수치 값을 리턴하므로 0을 붙여 2자리만 잘라 값을 변환해서 2자리수 맞추기
-   cBoard.prototype.userLocalString = function()
-   {
-      return this.writeDay.getFullYear() + "-"
-          + (this.writeDay.getMonth()+1) + "-"
-          + ('0' + this.writeDay.getDate()).slice(-2) + "-"
-          + ('0' + this.writeDay.getHours()).slice(-2) + ":"
-          + ('0' + this.writeDay.getMinutes()).slice(-2) + ":"
-          + ('0' + this.writeDay.getSeconds()).slice(-2);
-   }
+        // When the user clicks on the password field, show the message box
+        myInput.onfocus = function () {
+            document.getElementById("message").style.display = "block";
+        }
 
-   function main()
-   {
+        // When the user clicks outside of the password field, hide the message box
+        myInput.onblur = function () {
+            document.getElementById("message").style.display = "none";
+        }
 
-      //alert("함수 호출 확인");
-      let nComment = document.getElementById("nComment").value;
-      let cComment = document.getElementById("cComment").value;
+        // When the user starts to type something inside the password field
+        myInput.onkeyup = function () {
+            // Validate lowercase letters
+            var lowerCaseLetters = /[a-z]/g;
+            if (myInput.value.match(lowerCaseLetters)) {
+                letter.classList.remove("invalid");
+                letter.classList.add("valid");
+            } else {
+                letter.classList.remove("valid");
+                letter.classList.add("invalid");
+            }
 
-      let len = commentArray.length;
+            // Validate capital letters
+            var upperCaseLetters = /[A-Z]/g;
+            if (myInput.value.match(upperCaseLetters)) {
+                capital.classList.remove("invalid");
+                capital.classList.add("valid");
+            } else {
+                capital.classList.remove("valid");
+                capital.classList.add("invalid");
+            }
 
-      commentArray[len] = new cBoard(nComment, cComment);
+            // Validate numbers
+            var numbers = /[0-9]/g;
+            if (myInput.value.match(numbers)) {
+                number.classList.remove("invalid");
+                number.classList.add("valid");
+            } else {
+                number.classList.remove("valid");
+                number.classList.add("invalid");
+            }
 
-      print(len);
-      clear();
-   }
-
-   // 내용 출력 함수
-   function print(idx)
-   {
-      let tableNode = document.getElementById("bbsTable");
-      let trNode = document.createElement("tr");
-
-      trNode.appendChild(createTdNode((idx+1).toString()));
-      trNode.appendChild(createTdNode(commentArray[idx].nickname));
-      trNode.appendChild(createTdNode(commentArray[idx].content));
-      trNode.appendChild(createTdNode(commentArray[idx].userLocalString()));
-
-      tableNode.appendChild(trNode);
-   }
-
-   function createTdNode(val)
-   {
-      let textNode = document.createTextNode(val);
-      let tdNode = document.createElement("td");
-      tdNode.appendChild(textNode);
-      return tdNode;
-   }
-
-   function clear()
-   {
-	   	document.getElementById("nComment").value="";
-	   	document.getElementById("cComment").value="";
-	   	document.getElementById("nComment").focus();
-   }
-   <!-- 끝 : 방명록 글 작성 -->
+            // Validate length
+            if (myInput.value.length >= 8) {
+                length.classList.remove("invalid");
+                length.classList.add("valid");
+            } else {
+                length.classList.remove("valid");
+                length.classList.add("invalid");
+            }
+        }
+    */
 
 </script>
+<!-- 끝 : 비밀번호 설정 -->
 
 <body>
-<h1> Dev-viL 방명록</h1>
+<h3 class="title">Dev-viL 방명록</h3>
 
-    <!-- 시작 : 방명록 글쓰기 박스 -->
-<div class="comment-box">
-    <p> <input class ='nn-in-cb' type='text' name='nn' id='nComment' value='' title='nComment' placeholder='닉네임' autocomplete="off"/>
-        <input class ='pw-in-cb' type='text' name='pw' id='pComment' value='' title='password' placeholder='비밀번호' autocomplete="off"/>
-        <input class ='cb-in-cb' type="checkbox" name='cb' id='ckComment'/> 비밀글</p>
-    <p><textarea class ="content-in-cb" type='text' name="" id='cComment' placeholder='내용을 입력하세요.' autocomplete="off"></textarea></p>
-    <!-- 2022.11.09. 궁금? textarea placeholder로 넣는 것과 <textarea> 여기 </textarea>에 넣는 것의 차이는 뭐지?
-                          placeholder에 넣으면 입력 시 해당내용이 자동으로 지워짐. '여기'에는 내용 입력 시에도 그대로 남아 있음. -->
+<!-- 시작 : 방명록 글쓰기 박스 -->
+<form method="post">
+    <div class="write-box">
+        <!-- 스페이스바 제한 출처 : https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=dmswlvjvl&logNo=220699128023 -->
 
-    <p> <button class='btn btn-secondary' type='button' value="등록" onclick="main()">등록</button> </p>
+        <!-- 1. type='password'로 지정해서 입력한 값이 보이지 않게 설정 -->
+        <!-- 2. 비밀번호 최소최대 자리수 제한
+                출처 : https://bskyvision.com/entry/input-%ED%83%9C%EA%B7%B8-maxlength-%EC%86%8D%EC%84%B1 -->
+        <!-- 한국인터넷진흥원 역시 패스워드 생성 가이드라인을 수정
+             3종류 이상의 문자를 섞어 8자리 이상의 길이를 만드는 것에서 2종류 이상의 문자만 섞는 것으로,
+             또 10자리 이상의 패스워드를 만들 경우에는 문자를 섞지 않아도 된다는 내용으로 변경 -->
 
+        <!-- 비밀번호 설정 출처 : https://www.w3schools.com/howto/howto_js_password_validation.asp -->
+        <!-- 시작 : 비밀번호 설정 -->
+        <div class="container">
+            <form action="/action_page.php">
+
+                <input type="text" class="usrname" id="usrname" name="usrname"
+                       required placeholder="닉네임">
+
+                <input type="password" class="psw" id="psw" name="psw"
+                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                       placeholder="비밀번호">
+
+                <!-- 궁금? 구글 로그인 기능처럼 비밀번호 보이기/숨기기 기능 추가하려고 했으나 적용 오류
+                     출처 https://kutar37.tistory.com/entry/%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EB%B3%B4%EA%B8%B0%EC%88%A8%EA%B8%B0%EA%B8%B0-%EA%B8%B0%EB%8A%A5%EA%B5%AC%ED%98%84 -->
+                <img class="img-eye-show" src="https://cdn-icons-png.flaticon.com/512/4818/4818558.png"
+                     alt="profile-img" style="width:30px; height:30px;" onclick="pw_show()">
+                <img class="img-eye-hide" src="https://cdn-icons-png.flaticon.com/512/2355/2355322.png"
+                     alt="profile-img" style="width:30px; height:30px;" onclick="pw_hide()">
+
+                <span class="intro-psw">※ 비밀번호는 대/소문자/숫자를 포함해 8자리 이상으로 입력해주세요</span>
+                <div id="message">
+                    <p id="letter" class="invalid">
+                    <p id="capital" class="invalid">
+                    <p id="number" class="invalid">
+                    <p id="length" class="invalid">
+                </div>
+
+                <!-- 2022.11.10. 필요 : 내용이 늘어나면 textarea도 자동으로 늘어나게 추가 -->
+                <p><textarea class="content-in-cb" type='text' id='cntcomment' placeholder='내용을 입력하세요.'
+                             autocomplete="off"></textarea></p>
+                <!-- 2022.11.09. 궁금? textarea placeholder로 넣는 것과 <textarea> 여기 </textarea>에 넣는 것의 차이는 뭐지?
+                                      placeholder에 넣으면 입력 시 해당내용이 자동으로 지워짐. '여기'에는 내용 입력 시에도 그대로 남아 있음. -->
+                <span>
+        <input class='cb-in-cb' type="checkbox" id='ckComment'/> 비공개</span>
+
+                <input type="submit" value=" 등 록 "
+                       onclick="save_comment()">
+            </form>
+        </div>
+        </span>
     </div>
-    <!-- 끝 : 방명록 글쓰기 박스 -->
+    </div>
+</form>
+<!-- 끝 : 방명록 글쓰기 박스 -->
 
-    <!-- 시작 : 방명록 작성글 -->
-         <table class="tbl" id="bbsTable">
-            <tr>
-               <th>번호</th>
-               <th>작성자</th>
-               <th>내용</th>
-               <th>작성일</th>
-            </tr>
-         </table>
-    <!-- 끝 : 방명록 작성글 -->
+<!-- 시작 : 작성된 방명록 -->
+<div class="written-comment">
+    <div>
+        <img class="myimg"
+             src="https://cdn-icons.flaticon.com/svg/3917/3917705.svg?token=exp=1668051775~hmac=afcf6d257a594a7e53505c4ff48accee"
+             alt="profile-img" style="width:20px; height:20px;">
+
+        <span class="" id="nCList">닉네임
 
 
-    <!-- 시작 : 방명록 글 목록 번호 (부트스트랩) -->
-    <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
+            <!-- 2022.11.10. 궁금? 삭제를 먼저 써야 왼쪽에 나오는 이유는? class명을 같은걸로 지정해서 그런듯 -->
+    <button class="mybtn">수정</button>
+            <!-- 2022.11.10. 궁금? 버튼 간 간격 띄우고 싶은데? -->
+    <span class="btn_space"></span>
+    <button class="mybtn">삭제</button>
+        </span>
+        </br>
+        </br>
+        <p class="">내용</p>
+    </div>
+</div>
+<!-- 끝 : 작성된 방명록 -->
+
+<!-- 시작 : 방명록 글 목록 번호 (부트스트랩) -->
+<!-- 2022.11.10. 궁금? 숫자의 글자색 어떻게 바꾸지? color로 적용 안 됨 -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
 </nav>
-    <!-- 끝 : 방명록 글 목록 번호 -->
+<!-- 끝 : 방명록 글 목록 번호 -->
 
 </body>
 </html>
