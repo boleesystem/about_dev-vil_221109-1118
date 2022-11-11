@@ -1,14 +1,16 @@
-<!-- 2022.11.09. 구현 시작일 (코드 작성자 : 이보형) /  / 버전 2022.11.10. -->
-<!-- 발생오류 FE 해결중 4건, BE 해결 1건
+<!-- 2022.11.09. 구현 시작일 (코드 작성자 : 이보형) / 버전 2022.11.11.-->
+<!-- 발생오류 FE 해결중 2건 / 해결완료 3건, BE 해결중 1건 / 해결완료 1건
 FE
-1. [해결중/2022.11.10.] 버튼 순서(수정, 삭제 순으로 작성했으나 삭제, 수정 순으로 뜸) - class명이 같아서 그런 걸로 추정)
-2. [해결중/2022.11.10.] 버튼 간격(삭제, 수정 버튼 사이의 간격을 띄우고 싶어 구글링한대로  <span class="btn_space"></span>를 넣었으나 작동 안 함. 더 방법을 찾아 봐야 함)
-3. [해결중/2022.11.10.] 부트스트랩 글씨색 변경(부트스트랩에서 가져온 페이지번호(<<123>>>) 부분의 글씨색을 검정색으로 바꾸고 싶었으나 color로 적용 안됨. 강제 적용하는 방법이 있다고 하여 찾아 봐야 함)
+1-1. [해결완료/2022.11.10.~11.] 버튼 순서(수정, 삭제 순으로 작성했으나 삭제, 수정 순으로 뜸) - 두 버튼의 class명이 동일하기 때문인 것으로 추정했고, 변경 후 수정 버튼의 CSS에서 오른쪽 정렬(float: right;) 삭제하고 margin-left: 300px; 적용함
+1-2. [해결중/2022.11.11.] 닉네임과 수정/삭제 버튼 사이 간격(닉네임 문자수에 따라 그 간격이 달라짐)
+2. [해결완료/2022.11.10.~11.] 버튼 간격(11/10 삭제, 수정 버튼 사이의 간격을 띄우고 싶어 구글링한대로  <span class="btn_space"></span>를 넣었으나 작동 안 함. 11/11 수정 버튼의 CSS 오른쪽정렬 해제하니 해결됨)
+3. [해결완료/2022.11.10.~11.] 부트스트랩 글씨색 변경(11/10 부트스트랩에서 가져온 페이지번호(<<123>>>) 부분의 글씨색을 검정색으로 바꾸고 싶었으나 color로 적용 안됨. 강제 적용하는 방법이 있다고 하여 찾아 봐야 함. 11/11 링크 a 태그에 style="color:black으로 일일이 적용해 해결")
 4. [해결중/2022.11.10.] 비밀번호 보이기/숨기기 기능(적용 오류가 남. 중요기능은 아니므로 현재로서는 우선순위 최하위로 배치)
 
 BE
-1. [해결완료/2022.11.10.] 서버 호스팅 이슈(app_guestbook.py 즉 server.py 파일이 render_template으로 지정한 guestbook.html을 못찾는 이슈로 서버 호스팅이 안됨. .py 파일을 기존 폴더 밖으로 이동한 후 해결됨 / 파이썬 flask 기본 구조가 server.py 파일이 밖에 있고 templates 폴더 안에 접속할 html 파일이 들어 있어야 하는데, server.py 파일을 해당 폴더 안에 넣어놨기 때문에 flask가 찾지 못하는 오류가 발생한 것임)
+1. [해결완료/2022.11.10.~11.] 서버 호스팅 이슈(app_guestbook.py 즉 server.py 파일이 render_template으로 지정한 guestbook.html을 못찾는 이슈로 서버 호스팅이 안됨. .py 파일을 기존 폴더 밖으로 이동한 후 해결됨 / 파이썬 flask 기본 구조가 server.py 파일이 밖에 있고 templates 폴더 안에 접속할 html 파일이 들어 있어야 하는데, server.py 파일을 해당 폴더 안에 넣어놨기 때문에 flask가 찾지 못하는 오류가 발생한 것임)
 *jinja2.exceptions.TemplateNotFound: guestbook.html
+2. [해결중/2022.11.11.] 입력제한 미적용 등록 이슈(닉네임/비밀번호 입력 제한 설정 상관없이 방명록 글 등록 버튼 누르면 등록되는 이슈)
 -->
 
 <!DOCTYPE html>
@@ -84,16 +86,16 @@ BE
             margin: 0px 2px 9px -10px;
         }
 
-        .mybtn {
+        .btn-update {
             background-color: gainsboro;
-            float: right;
+            margin-left: 300px;
             border-radius: 4px;
         }
 
-        .btn_space {
-            width: 100px;
-            height: 10px;
-            display: inline-block;
+        .btn-delete {
+            background-color: gainsboro;
+            float: right;
+            border-radius: 4px;
         }
 
         .myimg {
@@ -154,7 +156,47 @@ BE
         crossOrigin="anonymous"></script>
 
 <script>
-    <!-- 시작 : DB 저장/조회 -->
+    <!-- 시작 : 방명록 DB 조회/저장/삭제/수정 -->
+    <!-- 설명 : $(document).ready()는 문서가 준비되면 매개변수로 넣은 콜백 함수를 실행하라는 의미 -->
+    $(document).ready(function () {
+        comment_list();
+});
+
+    function comment_list() {
+        $.ajax({
+            type: 'GET',
+            url: '/guestbook',
+            data: {},
+            success: function (response) {
+                let rows = response['comments']
+                for (let i = 0; i < rows.length; i++){
+                    let usrname = rows[i]['usrname']
+                    let cntcomment = rows[i]['cntcomment']
+
+                    let temp_html = `<div class="written-comment" id="written-comment">
+                                            <div>
+                                                <img class="myimg"
+                                                     src="https://cdn-icons.flaticon.com/svg/3917/3917705.svg?token=exp=1668051775~hmac=afcf6d257a594a7e53505c4ff48accee"
+                                                     alt="profile-img" style="width:20px; height:20px;">
+
+                                                <span class="" id="nCList">${usrname}</span>
+
+                                            <span><button type="button" class="btn-update">수정</button>
+                                            <button type="button" class="btn-delete" data-id=<%= posts[i]._id %>삭제</button></span>
+                                                </br>
+                                                </br>
+                                                <p class="">${cntcomment}</p>
+                                            </div>
+                                        </div>`
+
+ /* 2022.11.10. 궁금? 삭제를 먼저 써야 왼쪽에 나오는 이유는? class명을 같은걸로 지정해서 그런듯
+    2022.11.10. 궁금? 버튼 간 간격 띄우고 싶은데? */
+
+                    $(`#written-comment`).append(temp_html)
+                }
+            }
+        })
+    }
 
     function save_comment() {
         let usrname = $('#usrname').val()
@@ -171,7 +213,18 @@ BE
         })
     }
 
-    <!-- 끝 : DB 저장/조회 -->
+    $('.delete').click(function(){
+    $.ajax({
+      method : 'DELETE',
+      url : '/guestbook',
+      data : { _id : e.target.dataset.id }
+    }).done(function(result){
+
+  	  $(this).parent('li').fadeOut();
+    })
+  });
+
+    <!-- 끝 : 방명록 DB 조회/저장/삭제/수정 -->
 
     <!-- 시작 : 비밀번호 설정 -->
     /* var myInput = document.getElementById("psw");
@@ -254,6 +307,9 @@ BE
         <!-- 비밀번호 설정 출처 : https://www.w3schools.com/howto/howto_js_password_validation.asp -->
         <!-- 시작 : 비밀번호 설정 -->
         <div class="container">
+
+            <!-- 2022.11.11. 설명 : <form> 태그의 action 속성은 폼 데이터(form data)를 서버로 보낼 때
+                                    해당 데이터가 도착할 URL을 명시 -->
             <form action="/action_page.php">
 
                 <input type="text" class="usrname" id="usrname" name="usrname"
@@ -263,7 +319,7 @@ BE
                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                        placeholder="비밀번호">
 
-                <!-- 궁금? 구글 로그인 기능처럼 비밀번호 보이기/숨기기 기능 추가하려고 했으나 적용 오류
+                <!-- 2022.11.10. 궁금? 구글 로그인 기능처럼 비밀번호 보이기/숨기기 기능 추가하려고 했으나 적용 오류
                      출처 https://kutar37.tistory.com/entry/%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EB%B3%B4%EA%B8%B0%EC%88%A8%EA%B8%B0%EA%B8%B0-%EA%B8%B0%EB%8A%A5%EA%B5%AC%ED%98%84 -->
                 <img class="img-eye-show" src="https://cdn-icons-png.flaticon.com/512/4818/4818558.png"
                      alt="profile-img" style="width:30px; height:30px;" onclick="pw_show()">
@@ -286,7 +342,7 @@ BE
                 <span>
         <input class='cb-in-cb' type="checkbox" id='ckComment'/> 비공개</span>
 
-                <input type="submit" value=" 등 록 "
+                <input type="submit" value="등록하기"
                        onclick="save_comment()">
             </form>
         </div>
@@ -297,42 +353,26 @@ BE
 <!-- 끝 : 방명록 글쓰기 박스 -->
 
 <!-- 시작 : 작성된 방명록 -->
-<div class="written-comment">
-    <div>
-        <img class="myimg"
-             src="https://cdn-icons.flaticon.com/svg/3917/3917705.svg?token=exp=1668051775~hmac=afcf6d257a594a7e53505c4ff48accee"
-             alt="profile-img" style="width:20px; height:20px;">
-
-        <span class="" id="nCList">닉네임
-
-
-            <!-- 2022.11.10. 궁금? 삭제를 먼저 써야 왼쪽에 나오는 이유는? class명을 같은걸로 지정해서 그런듯 -->
-    <button class="mybtn">수정</button>
-            <!-- 2022.11.10. 궁금? 버튼 간 간격 띄우고 싶은데? -->
-    <span class="btn_space"></span>
-    <button class="mybtn">삭제</button>
-        </span>
-        </br>
-        </br>
-        <p class="">내용</p>
-    </div>
-</div>
+<div id="written-comment"> </div>
 <!-- 끝 : 작성된 방명록 -->
 
+
+
 <!-- 시작 : 방명록 글 목록 번호 (부트스트랩) -->
-<!-- 2022.11.10. 궁금? 숫자의 글자색 어떻게 바꾸지? color로 적용 안 됨 -->
+<!-- 2022.11.10. 궁금? 숫자의 글자색 어떻게 바꾸지? color로 적용 안 됨
+    (11/11 해결완료 출처 : https://ojji.wayful.com/2015/01/HTML-A-href-tag-Font-Color-on-Text-Link.html) -->
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
+        <li class="page-item" >
+            <a class="page-link" href="#" aria-label="Previous" style="color:black">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#" style="color:black">1</a></li>
+        <li class="page-item"><a class="page-link" href="#" style="color:black">2</a></li>
+        <li class="page-item"><a class="page-link" href="#" style="color:black">3</a></li>
         <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
+            <a class="page-link" href="#" aria-label="Next" style="color:black">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
