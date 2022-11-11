@@ -23,8 +23,7 @@ def web_guestbook_post():
 
 @app.route("/guestbook", methods=["GET"])
 def web_guestbook_get():
-    comment_list = list(db.guestbook.find({}, {'_id': False}))
-    return jsonify({'comments':comment_list})
+    return jsonify({'msg': 'GET 연결 완료!'})
 
 if __name__ == '__main__':
    app.run('0.0.0.0', port=5000, debug=True)
