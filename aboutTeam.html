@@ -1,95 +1,315 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-     <!-- 반응형 웹사이트 만들 때 필요한 코드(부트스트랩) -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-   
-    <title>Dev-viL</title>
+    <!-- 반응형 웹사이트 만들 때 필요한 코드(부트스트랩) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!--    부트스트랩 이용하기위한 기본코드-->
+    <link   href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous">
+    </script>
 
     <!-- jquery 사용하기 위한 코드 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- 폰트 -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Jost&family=Poppins&display=swap" rel="stylesheet">
 
+    <!--    폰트어썸아이콘 사용하기위한 CDN-->
+    <script src="https://kit.fontawesome.com/0e6e778c22.js" crossorigin="anonymous"></script>
+
+    <!--    티스토리 아이콘이 없어서 직접만든 아이콘 사용하기 위한 CDN(24시간마다 교체해줘야함)-->
+    <link rel="stylesheet" href="https://i.icomoon.io/public/temp/f4fa46c092/UntitledProject/style.css">
+
+    <!--    다른방법으로는 아이콘을 다운받아서 직접 경로지정해준 것-->
+    <link rel="stylesheet" href="icomoon/style.css"/>
     <!-- CSS연결 -->
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css"/>
+
+    <!--    타이틀-->
+    <title>Dev-viL</title>
 
     <!-- 파비콘 -->
-    <link href="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbXkOjC%2FbtrQN90FY2W%2FERAO2jykU03hgKAyMn69rK%2Fimg.png" rel="shortcut icon" type="image/x-icon">
-  </head>
-  <body>
-    <!-- 반응형 네비게이션바 html 출처: https://taesung1993.tistory.com/27 -->
-    <nav>
-      <!-- 로고 -->
-      <div class="logo"> 
-        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png" class ="logo_img_body"> 
-      </div>
-      <!-- 네비게이션바 목록 -->
-      <ul class="nav-links">
+    <link href="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbXkOjC%2FbtrQN90FY2W%2FERAO2jykU03hgKAyMn69rK%2Fimg.png"
+          rel="shortcut icon" type="image/x-icon">
+</head>
+<body>
+<!-- 반응형 네비게이션바 html 출처: https://taesung1993.tistory.com/27 -->
+<nav>
+    <!-- 로고 -->
+    <div class="logo">
+        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png">
+    </div>
+    <!-- 네비게이션바 목록 -->
+    <ul class="nav-links">
         <li>
-          <a href="#">팀소개</a>
+            <a href="#aboutTeam">팀소개</a>
         </li>
         <li>
-          <a href="#">블로그</a>
+            <a href="#blog">블로그</a>
         </li>
         <li>
-          <a href="#">방명록</a>
+            <a href="#guestBook">방명록</a>
         </li>
-      </ul>
-      <div class="burger">
+        <li>
+            <a href="#guestBook">방명록</a>
+        </li>
+    </ul>
+    <div class="burger">
         <!-- 화면 줄였을 때 메뉴 나오게 하는 곳 -->
         <div class="line1"></div>
         <div class="line2"></div>
         <div class="line3"></div>
-      </div>
-    </nav>
-    
-    <!-- 스크롤 내릴 때 배경 바꾸는 영역나누기 출처: https://stickode.tistory.com/438 -->
-    <div class="panel" data-color="gray">
-      <div>
-        <h1>Magic scrolling colours</h1>
-      </div>
     </div>
-    <div class="panel" data-color="violet">
-      <h2>Violet panel</h2>
-    </div>
-    <div class="panel" data-color="indigo">
-      <h2>Indigo panel</h2>
-    </div>
-    <div class="panel" data-color="blue">
-      <h2>Blue panel</h2>
-    </div>
-    <div class="panel" data-color="green">
-      <h2>Green panel</h2>
-    </div>
-    <div class="panel" data-color="yellow">
-      <h2>Yellow panel</h2>
-    </div>
-    <div class="panel" data-color="orange">
-      <h2>Orange panel</h2>
-    </div>
-    <div class="panel" data-color="red">
-      <h2>Red panel</h2>
-    </div>
+</nav>
 
-    <!-- 위로 올라가는 버튼 만들기 출처: https://help.campaignus.me/article/272-topbutton -->
-    <a href="#" class="btn_gotop">
-      <span class="glyphicon glyphicon-chevron-up">
-        <img src="https://cdn.icon-icons.com/icons2/1883/PNG/512/caretsymbol_120671.png" class ="top_img"> 
-      </span>
-    </a>
-
-    <!-- 버튼만들기 응용 -->
-    <div class="btn_chat">
-      <img alt="채팅하기"
-           src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcj3gNX%2FbtrQQdgcmbT%2FqjcF8kNzhJom9Enen1TwmK%2Fimg.png"
-           class="chat_img">
+<!-- 스크롤 내릴 때 배경 바꾸는 영역나누기 출처: https://stickode.tistory.com/438 -->
+<div class="panel" data-color="gray">
+    <div>
+        <h1>Main page</h1>
     </div>
+</div>
+<div class="panel" data-color="violet">
+    <h2>Violet panel</h2>
+</div>
+<div class="panel" data-color="indigo">
+    <h2>Indigo panel</h2>
+</div>
+<div class="panel" data-color="blue">
+    <h2>Blue panel</h2>
+</div>
+<div class="panel" data-color="green">
+    <h2>개발일정(연혁)</h2>
+</div>
+<div class="panel" id="aboutTeam" data-color="yellow">
 
+    <!--    팀원소개 기본페이지-->
+    <main class="grid">
 
-    <!-- javascript 연결경로 -->
-    <script src="app.js"></script>
+        <section class="content item1">
+            <h1>Dev-viL 팀원 소개</h1>
+            <p>팀구호 : 데빌 이기자</p>
+        </section>
+        <section onclick="open_box1()" class="outcard item2">
+            <h2>이보형<h2>
+        </section>
+        <section class="outcard item3"></section>
+        <section class="outcard item4"></section>
+        <section onclick="open_box2()" class="outcard item5">
+            <h2>우태현<h2>
+        </section>
+        <section class="outcard item7"></section>
+        <section onclick="open_box3()" class="outcard item8">
+            <h2>전수빈<h2>
+        </section>
+        <section class="outcard item9"></section>
+        <section class="outcard item10"></section>
+        <section onclick="open_box4()" class="outcard item11">
+            <h2>최원빈<h2>
+        </section>
+    </main>
+
+    <!--팀원소개 인카드-->
+    <div class="container" id="introduce1">
+        <ul class="incards">
+            <li class="incard incards__item">
+                <ul class="social-icons" id="close__btn">
+                    <li><a onclick="close_box1()"><i class="fa-solid fa-xmark"></i></a></li>
+                </ul>
+                <div class="incard__frame">
+                    <div class="incard__picture">
+                        <img
+                                src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                                alt=""
+                        />
+                    </div>
+                    <h1 class="incard__title">이보형</h1>
+                    <ul class="social-icons">
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-github"></i></a></li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-slack"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-discord"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                        <li><a href="#"><i class="icon-A5C3448C5071"></i></a></li>
+                    </ul>
+                </div>
+                <div class="incard__overlay"></div>
+                <div class="incard__content">
+                    <img
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                            alt=""
+                    />
+                    <h1>이보형</h1>
+                    <p>
+                        비전공자(콘텐츠전공 / INTJ / 31살 / 공공기관 통계담당 /
+                        집순이(영화/책/음악, 자전거, 등산 등 운동) / 서비스/솔루션업
+                        취업희망 / 사전캠프 10/18 합류 / 작년말 직무전환 결정 이전에
+                        자바기초 학원 다님 + 정처기 공부함
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="container" id="introduce2">
+        <ul class="incards">
+            <li class="incard incards__item">
+                <ul class="social-icons" id="close__btn">
+                    <li><a onclick="close_box2()"><i class="fa-solid fa-xmark"></i></a></li>
+                </ul>
+                <div class="incard__frame">
+                    <div class="incard__picture">
+                        <img
+                                src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                                alt=""
+                        />
+                    </div>
+                    <h1 class="incard__title">우태현</h1>
+                    <ul class="social-icons">
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-github"></i></a></li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-slack"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-discord"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                        <li><a href="#"><i class="icon-A5C3448C5071"></i></a></li>
+                    </ul>
+                </div>
+                <div class="incard__overlay"></div>
+                <div class="incard__content">
+                    <img
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                            alt=""
+                    />
+                    <h1>우태현</h1>
+                    <p>
+                        반전공자(중국어전공) / 대만 정보공학과 편입 - 데이터베이스, 빅데이터 등 정보 주고 받는 등의 것 배움 / 프로그래밍 언어 찍먹 / 올해 7월말 귀국!) / INTJ /
+                        28살 / 집돌이(게임 - 현재는 닌텐도 정도로 즐기고 있음, 음악듣기) / 현재로서는 스타트업 취업희망, 경력 쌓으면서 커리어 결정 예정
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="container" id="introduce3">
+        <ul class="incards">
+            <li class="incard incards__item">
+                <ul class="social-icons" id="close__btn">
+                    <li><a onclick="close_box3()"><i class="fa-solid fa-xmark"></i></a></li>
+                </ul>
+                <div class="incard__frame">
+                    <div class="incard__picture">
+                        <img
+                                src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                                alt=""
+                        />
+                    </div>
+                    <h1 class="incard__title">전수빈</h1>
+                    <ul class="social-icons">
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-github"></i></a></li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-slack"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-discord"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                        <li><a href="#"><i class="icon-A5C3448C5071"></i></a></li>
+                    </ul>
+                </div>
+                <div class="incard__overlay"></div>
+                <div class="incard__content">
+                    <img
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                            alt=""
+                    />
+                    <h1>전수빈</h1>
+                    <p>
+                        비전공자/상해복단대학교 경영학전공/ ENTP/32살/취미는 재태크?/ 돈많은백수 / 11월4일 / 경험은 없지만 스타트업시작할때 몇번 본정도? (편집됨)
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="container" id="introduce4">
+        <ul class="incards">
+            <li class="incard incards__item">
+                <ul class="social-icons" id="close__btn">
+                    <li><a onclick="close_box4()"><i class="fa-solid fa-xmark"></i></a></li>
+                </ul>
+                <div class="incard__frame">
+                    <div class="incard__picture">
+                        <img
+                                src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                                alt=""
+                        />
+                    </div>
+                    <h1 class="incard__title">최원빈</h1>
+                    <ul class="social-icons">
+                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-github"></i></a></li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-slack"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-discord"></i></a></li>
+                        <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                        <li><a href="#"><i class="icon-A5C3448C5071"></i></a></li>
+                    </ul>
+                </div>
+                <div class="incard__overlay"></div>
+                <div class="incard__content">
+                    <img
+                            src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FOt3GY%2FbtrQOB3tLms%2FweZBaDK1w4uoOcXrAF4FSk%2Fimg.png"
+                            alt=""
+                    />
+                    <h1>최원빈</h1>
+                    <p>
+                        비전공자(수학과 - 선형대수, 현대대수) / ISTJ / 32살 / 회계사 준비 / 집돌이(유튜브, 런닝맨 등 시청, 게임) / 스타트업 등 경력 쌓을 수 있는 곳 취업희망
+                        / 사전캠프 10/11 합류 / 개발은 아예 처음
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="panel" id="blog" data-color="orange">
+    <h2>blog crawling page</h2>
+</div>
+<div class="panel" id="guestBook" data-color="red">
+    <h2>guest book page</h2>
+</div>
+
+<!-- 위로 올라가는 버튼 만들기 출처: https://help.campaignus.me/article/272-topbutton -->
+
+<div class="btn_gotop">
+    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbHnnjG%2FbtrQZ3yPLJI%2FO79DH0qpoZaWrQGwMh5KBK%2Fimg.png">
+</div>
+<!-- 버튼만들기 응용으로 채팅버튼 -->
+<div class="btn_chat_open">
+    <img alt="채팅하기" onclick="chat_open()"
+         src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbxSFck%2FbtrQ0HPGTGg%2FkdzQBXdGBcNNnacRHPVhN0%2Fimg.png">
+</div>
+<div class="btn_chat_close">
+    <img alt="채팅닫기" onclick="chat_close()"
+         src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2Fcg5h3D%2FbtrQ0lzoKnP%2FT2c3JWOq3bgzhXemFktSv1%2Fimg.png">
+</div>
+
+<!-- javascript 연결경로 -->
+<script src="app.js"></script>
+</body>
 </html>
+
+
+
+
+
+
